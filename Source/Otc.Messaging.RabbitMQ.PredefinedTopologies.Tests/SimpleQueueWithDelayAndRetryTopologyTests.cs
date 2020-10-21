@@ -70,23 +70,39 @@ namespace Otc.Messaging.RabbitMQ.PredefinedTopologies.Tests
         {
             var rabbitMQConfiguration = new RabbitMQConfiguration();
 
-            Assert.Throws<ArgumentException>(() =>
+            Exception ex;
+
+            ex = Assert.Throws<ArgumentException>(() =>
             {
                 rabbitMQConfiguration.AddTopology<SimpleQueueWithDelayAndRetryTopologyFactory>(
                     "mytopic");
             });
 
-            Assert.Throws<ArgumentException>(() =>
+            Assert.Contains("Must provide delay", ex.Message);
+
+            ex = Assert.Throws<ArgumentException>(() =>
             {
                 rabbitMQConfiguration.AddTopology<SimpleQueueWithDelayAndRetryTopologyFactory>(
                     "mytopic", "not-number");
             });
 
-            Assert.Throws<ArgumentException>(() =>
+            Assert.Contains("must be of type int", ex.Message);
+
+            ex = Assert.Throws<ArgumentException>(() =>
+            {
+                rabbitMQConfiguration.AddTopology<SimpleQueueWithDelayAndRetryTopologyFactory>(
+                    "mytopic", 0);
+            });
+
+            Assert.Contains("must be positive and greater than zero", ex.Message);
+
+            ex = Assert.Throws<ArgumentException>(() =>
             {
                 rabbitMQConfiguration.AddTopology<SimpleQueueWithDelayAndRetryTopologyFactory>(
                     "mytopic", -1);
             });
+
+            Assert.Contains("must be positive and greater than zero", ex.Message);
         }
 
         private string GetSingleQueueDlxName(IEnumerable<Exchange> exchanges, string topicName)
