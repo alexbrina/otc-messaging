@@ -5,19 +5,24 @@ using System.Collections.Generic;
 
 namespace Otc.Messaging.RabbitMQ.PredefinedTopologies
 {
-    /// <summary>
-    /// Create wait -> retry -> deadletter topology
-    /// </summary>
+    /// <inheritdoc cref="Create(string, object[])" />
     public class MultipleQueuesWithDelayAndRetryTopologyFactory : ITopologyFactory
     {
         /// <summary>
-        /// Create topology
+        /// Create a topology with one exchange and multiple main queues.
+        /// You can optionally set retry queues by defining wait times for each main queue.
+        /// For this topology you must define an initial delay that a message will wait before
+        /// being moved to main queues.
         /// </summary>
+        /// <remarks>
+        /// Argument <c>object[]</c> of method <see cref="Create(string, object[])"/>
+        /// must be of type <see cref="QueueTopology"/>
+        /// </remarks>
         /// <param name="mainExchangeName">
         ///     The main exchange name.
         /// </param>
         /// <param name="args">
-        ///     Array of <see cref="QueueTopology"/> to send published messages.
+        ///     See remarks above.
         /// </param>
         /// <returns>The created topology</returns>
         public Topology Create(string mainExchangeName, params object[] args)
