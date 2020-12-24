@@ -273,6 +273,7 @@ namespace Otc.Messaging.RabbitMQ.Tests
                 MessageHandlerErrorBehavior.RejectOnFistDelivery;
 
             using (var bus = new RabbitMQMessaging(configuration,
+                new RabbitMQMessageContextFactory(configuration),
                 serviceProvider.GetService<ILoggerFactory>()))
             {
                 bus.CreatePublisher().Publish(Encoding.UTF8.GetBytes(BadMessage.Text), "test-09");
@@ -296,6 +297,7 @@ namespace Otc.Messaging.RabbitMQ.Tests
                 MessageHandlerErrorBehavior.RejectOnRedelivery;
 
             using (var bus = new RabbitMQMessaging(configuration,
+                new RabbitMQMessageContextFactory(configuration),
                 serviceProvider.GetService<ILoggerFactory>()))
             {
                 bus.CreatePublisher().Publish(Encoding.UTF8.GetBytes(BadMessage.Text), "test-10");

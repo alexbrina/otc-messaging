@@ -4,6 +4,7 @@ using RabbitMQ.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 
 namespace Otc.Messaging.RabbitMQ.Configurations
 {
@@ -71,6 +72,16 @@ namespace Otc.Messaging.RabbitMQ.Configurations
         /// </remarks>
         public MessageHandlerErrorBehavior MessageHandlerErrorBehavior { get; set; } =
             MessageHandlerErrorBehavior.RejectOnRedelivery;
+
+        /// <summary>
+        /// Feature flag that enables the message hash calculation. Default is false.
+        /// </summary>
+        public bool CalculateMessageHash { get; set; } = false;
+
+        /// <summary>
+        /// Defines the hash algorithm used in message hash calculation. Default is SHA512.
+        /// </summary>
+        public HashAlgorithmName MessageHashAlgorithm { get; set; } = HashAlgorithmName.SHA512;
 
         /// <summary>
         /// List of Topologies used by this client.

@@ -21,6 +21,7 @@ namespace Otc.Messaging.RabbitMQ
     public class RabbitMQMessaging : IMessaging
     {
         private readonly RabbitMQConfiguration configuration;
+        private readonly RabbitMQMessageContextFactory messagageContextFactory;
         private readonly ILoggerFactory loggerFactory;
         private readonly ILogger logger;
         private readonly ICollection<RabbitMQPublisher> publishers;
@@ -67,10 +68,14 @@ namespace Otc.Messaging.RabbitMQ
 
         public RabbitMQMessaging(
             RabbitMQConfiguration configuration,
+            RabbitMQMessageContextFactory messagageContextFactory,
             ILoggerFactory loggerFactory)
         {
             this.configuration = configuration ??
                 throw new ArgumentNullException(nameof(configuration));
+
+            this.messagageContextFactory = messagageContextFactory ??
+                throw new ArgumentNullException(nameof(messagageContextFactory));
 
             this.loggerFactory = loggerFactory ??
                 throw new ArgumentNullException(nameof(loggerFactory));
@@ -121,7 +126,7 @@ namespace Otc.Messaging.RabbitMQ
             var (channel, channelEvents) = CreateChannel();
 
             var subscription = new RabbitMQSubscription(channel, channelEvents, handler,
-                configuration, this, loggerFactory, queues);
+                configuration, this, messagageContextFactory, loggerFactory, queues);
 
             subscriptions.Add(subscription);
 

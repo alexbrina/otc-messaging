@@ -35,6 +35,11 @@ namespace Otc.Messaging.Abstractions
         bool Redelivered { get; }
 
         /// <summary>
+        /// Calculated hash string based on message content.
+        /// </summary>
+        string Hash { get; }
+
+        /// <summary>
         /// The token to check for async cancellation request.
         /// </summary>
         CancellationToken CancellationToken { get; }

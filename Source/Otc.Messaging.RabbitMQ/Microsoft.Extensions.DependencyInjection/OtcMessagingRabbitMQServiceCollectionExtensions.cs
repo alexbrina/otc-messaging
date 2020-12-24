@@ -1,4 +1,5 @@
-﻿using Otc.Messaging.Abstractions;
+﻿using Microsoft.Extensions.DependencyInjection.Extensions;
+using Otc.Messaging.Abstractions;
 using Otc.Messaging.RabbitMQ;
 using Otc.Messaging.RabbitMQ.Configurations;
 using System;
@@ -22,6 +23,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddSingleton(configuration);
             services.AddScoped<IMessaging, RabbitMQMessaging>();
+            services.TryAddSingleton(new RabbitMQMessageContextFactory(configuration));
 
             return services;
         }

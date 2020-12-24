@@ -29,6 +29,7 @@ namespace Otc.Messaging.RabbitMQ
         private readonly Action<byte[], IMessageContext> handler;
         private readonly RabbitMQConfiguration configuration;
         private readonly RabbitMQMessaging messaging;
+        private readonly RabbitMQMessageContextFactory messagageContextFactory;
         private readonly string[] queues;
         private readonly ILogger logger;
         private readonly IDictionary<string, string> consumersToQueues;
@@ -47,6 +48,7 @@ namespace Otc.Messaging.RabbitMQ
             Action<byte[], IMessageContext> handler,
             RabbitMQConfiguration configuration,
             RabbitMQMessaging messaging,
+            RabbitMQMessageContextFactory messagageContextFactory,
             ILoggerFactory loggerFactory,
             params string[] queues)
         {
@@ -64,6 +66,9 @@ namespace Otc.Messaging.RabbitMQ
 
             this.messaging = messaging ??
                 throw new ArgumentNullException(nameof(messaging));
+
+            this.messagageContextFactory = messagageContextFactory ??
+                throw new ArgumentNullException(nameof(messagageContextFactory));
 
             this.queues = queues ??
                 throw new ArgumentNullException(nameof(queues));
@@ -205,7 +210,7 @@ namespace Otc.Messaging.RabbitMQ
         private void MessageHandling(string queue, BasicDeliverEventArgs ea)
         {
             var message = ea.Body.ToArray();
-            var messageContext = new RabbitMQMessageContext(ea, queue, cancellationToken);
+            var messageContext = messagageContextFactory.Create(ea, queue, cancellationToken);
 
             try
             {

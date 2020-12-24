@@ -136,13 +136,16 @@ namespace Otc.Messaging.RabbitMQ.PredefinedTopologies.Tests
             {
                 Hosts = new List<string> { "localhost" },
                 User = "guest",
-                Password = "guest"
+                Password = "guest",
+                VirtualHost = "Tests"
             };
 
             configuration.AddTopology<MultipleQueuesWithRetryTopologyFactory>(
                 "test-funout", "test-funout-q1", "test-funout-q2", 4000, 8000);
 
-            using (var bus = new RabbitMQMessaging(configuration, new LoggerFactory()))
+            using (var bus = new RabbitMQMessaging(configuration,
+                new RabbitMQMessageContextFactory(configuration),
+                new LoggerFactory()))
             {
                 bus.EnsureTopology("test-funout");
 
